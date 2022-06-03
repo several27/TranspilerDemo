@@ -3,8 +3,70 @@ description: ''
 version: 0.0.1
 author: maciej+transpiler-demo@prophecy.io
 language: scala
-pipelines: {}
-datasets: {}
+pipelines:
+  pipelines/customers_orders:
+    name: customers_orders
+    description: null
+    author: maciej+transpiler-demo@prophecy.io
+    mode: batch
+    language: scala
+    createdAt: '2022-06-03 18:13:53'
+    datasets:
+      inputs:
+      - 5721/datasets/Customers
+      - 5721/datasets/Orders
+      outputs:
+      - 5721/datasets/Report
+    dependencies: {}
+datasets:
+  datasets/Orders:
+    name: Orders
+    description: 'Dataset for Imported Pipeline:customers_orders componentName: Orders'
+    author: maciej+transpiler-demo@prophecy.io
+    createdAt: '2022-06-03 18:13:53'
+    physicalDatasets:
+      dev:
+        fabricId: 1147
+        datasetType: File
+        description: ''
+        author: maciej+transpiler-demo@prophecy.io
+        createdAt: '2022-06-03 18:13:53'
+  datasets/Report:
+    name: Report
+    description: 'Dataset for Imported Pipeline:customers_orders componentName: Report'
+    author: maciej+transpiler-demo@prophecy.io
+    createdAt: '2022-06-03 18:13:53'
+    physicalDatasets:
+      dev:
+        fabricId: 1147
+        datasetType: File
+        description: ''
+        author: maciej+transpiler-demo@prophecy.io
+        createdAt: '2022-06-03 18:13:53'
+  datasets/DeltaReport:
+    name: DeltaReport
+    description: ''
+    author: maciej+transpiler-demo@prophecy.io
+    createdAt: '2022-06-03 17:57:14'
+    physicalDatasets:
+      dev:
+        fabricId: 1147
+        datasetType: Database
+        description: ''
+        author: maciej+transpiler-demo@prophecy.io
+        createdAt: '2022-06-03 17:57:14'
+  datasets/Customers:
+    name: Customers
+    description: 'Dataset for Imported Pipeline:customers_orders componentName: Customers'
+    author: maciej+transpiler-demo@prophecy.io
+    createdAt: '2022-06-03 18:13:53'
+    physicalDatasets:
+      dev:
+        fabricId: 1147
+        datasetType: File
+        description: ''
+        author: maciej+transpiler-demo@prophecy.io
+        createdAt: '2022-06-03 18:13:53'
 jobs: {}
 libraries: []
 subgraphs: {}

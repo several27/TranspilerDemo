@@ -1,0 +1,444 @@
+{
+  "metainfo" : {
+    "id" : "demo",
+    "language" : "scala",
+    "fabricId" : "1147",
+    "frontEndLanguage" : "scala",
+    "mode" : "batch",
+    "interimMode" : "Full",
+    "udfs" : {
+      "language" : "scala",
+      "udfs" : [ ]
+    },
+    "configuration" : {
+      "common" : {
+        "type" : "record",
+        "fields" : [ ]
+      },
+      "fabrics" : {
+        "dev" : {
+          "type" : "record",
+          "fields" : [ ]
+        }
+      }
+    },
+    "sparkConf" : [ ],
+    "hadoopConf" : [ ],
+    "codeMode" : "sparse",
+    "buildSystem" : "maven",
+    "externalDependencies" : [ ]
+  },
+  "connections" : [ {
+    "id" : "e0",
+    "source" : "ByAmounts",
+    "sourcePort" : "ByAmounts__out",
+    "target" : "Report",
+    "targetPort" : "Report__in"
+  }, {
+    "id" : "e1",
+    "source" : "Cleanup_Reformat",
+    "sourcePort" : "Cleanup_Reformat__out",
+    "target" : "ByAmounts",
+    "targetPort" : "ByAmounts__in"
+  }, {
+    "id" : "e2",
+    "source" : "SumAmounts",
+    "sourcePort" : "SumAmounts__out",
+    "target" : "Cleanup_Reformat",
+    "targetPort" : "Cleanup_Reformat__in"
+  }, {
+    "id" : "e3",
+    "source" : "ByCustomerId",
+    "sourcePort" : "ByCustomerId__out",
+    "target" : "SumAmounts",
+    "targetPort" : "SumAmounts__in"
+  }, {
+    "id" : "e5",
+    "source" : "Customers",
+    "sourcePort" : "Customers__out",
+    "target" : "SortCustomers",
+    "targetPort" : "SortCustomers__in"
+  }, {
+    "id" : "e6",
+    "source" : "SortOrders",
+    "sourcePort" : "SortOrders__out",
+    "target" : "ByCustomerId",
+    "targetPort" : "ByCustomerId__right"
+  }, {
+    "id" : "e4",
+    "source" : "SortCustomers",
+    "sourcePort" : "SortCustomers__out",
+    "target" : "ByCustomerId",
+    "targetPort" : "ByCustomerId__left"
+  }, {
+    "id" : "e7",
+    "source" : "Orders",
+    "sourcePort" : "Orders__out",
+    "target" : "SortOrders",
+    "targetPort" : "SortOrders__in"
+  } ],
+  "processes" : {
+    "Cleanup_Reformat" : {
+      "id" : "Cleanup_Reformat",
+      "component" : "Reformat",
+      "metadata" : {
+        "label" : "Cleanup_Reformat",
+        "slug" : "Cleanup_Reformat",
+        "x" : 920.0001696940769,
+        "y" : 220,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "Cleanup_Reformat__in",
+          "slug" : "in"
+        } ],
+        "outputs" : [ {
+          "id" : "Cleanup_Reformat__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "columnsSelector" : [ "Cleanup_Reformat__in##amount" ],
+        "expressions" : [ {
+          "target" : "amount",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "round(col(\"amount\"))"
+          },
+          "description" : ""
+        } ]
+      }
+    },
+    "ByAmounts" : {
+      "id" : "ByAmounts",
+      "component" : "OrderBy",
+      "metadata" : {
+        "label" : "ByAmounts",
+        "slug" : "ByAmounts",
+        "x" : 1120.0002381640934,
+        "y" : 220,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "ByAmounts__in",
+          "slug" : "in"
+        } ],
+        "outputs" : [ {
+          "id" : "ByAmounts__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "columnsSelector" : [ ],
+        "orders" : [ {
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"amount\")"
+          },
+          "sortType" : "desc"
+        } ]
+      }
+    },
+    "ByCustomerId" : {
+      "id" : "ByCustomerId",
+      "component" : "Join",
+      "metadata" : {
+        "label" : "ByCustomerId",
+        "slug" : "ByCustomerId",
+        "x" : 520.0004882910748,
+        "y" : 220,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "ByCustomerId__right",
+          "slug" : "right"
+        }, {
+          "id" : "ByCustomerId__left",
+          "slug" : "left"
+        } ],
+        "outputs" : [ {
+          "id" : "ByCustomerId__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "conditions" : [ {
+          "alias" : "left",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"left.customer_id\") === col(\"right.customer_id\")"
+          },
+          "joinType" : "inner"
+        } ],
+        "expressions" : [ {
+          "_row_id" : null,
+          "target" : "first_name",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"left.first_name\")"
+          },
+          "description" : ""
+        }, {
+          "_row_id" : null,
+          "target" : "last_name",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"left.last_name\")"
+          },
+          "description" : ""
+        }, {
+          "_row_id" : null,
+          "target" : "customer_id",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"left.customer_id\")"
+          },
+          "description" : ""
+        }, {
+          "_row_id" : null,
+          "target" : "amount",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"right.amount\")"
+          },
+          "description" : ""
+        } ],
+        "activeTab" : "conditions",
+        "columnsSelector" : [ ],
+        "whereClause" : null,
+        "headAlias" : "right"
+      }
+    },
+    "SortCustomers" : {
+      "id" : "SortCustomers",
+      "component" : "OrderBy",
+      "metadata" : {
+        "label" : "SortCustomers",
+        "slug" : "SortCustomers",
+        "x" : 320.00021217351764,
+        "y" : 320,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "SortCustomers__in",
+          "slug" : "in"
+        } ],
+        "outputs" : [ {
+          "id" : "SortCustomers__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "columnsSelector" : [ ],
+        "orders" : [ {
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"customer_id\")"
+          },
+          "sortType" : "asc"
+        } ]
+      }
+    },
+    "SortOrders" : {
+      "id" : "SortOrders",
+      "component" : "OrderBy",
+      "metadata" : {
+        "label" : "SortOrders",
+        "slug" : "SortOrders",
+        "x" : 320.0006098327447,
+        "y" : 120,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "SortOrders__in",
+          "slug" : "in"
+        } ],
+        "outputs" : [ {
+          "id" : "SortOrders__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "columnsSelector" : [ ],
+        "orders" : [ {
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"customer_id\")"
+          },
+          "sortType" : "asc"
+        } ]
+      }
+    },
+    "SumAmounts" : {
+      "id" : "SumAmounts",
+      "component" : "Aggregate",
+      "metadata" : {
+        "label" : "SumAmounts",
+        "slug" : "SumAmounts",
+        "x" : 720.0001872890618,
+        "y" : 220,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "SumAmounts__in",
+          "slug" : "in"
+        } ],
+        "outputs" : [ {
+          "id" : "SumAmounts__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "doPivot" : false,
+        "aggregate" : [ {
+          "_row_id" : null,
+          "target" : "first_name",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "first(col(\"first_name\"))"
+          },
+          "description" : ""
+        }, {
+          "_row_id" : null,
+          "target" : "last_name",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "first(col(\"last_name\"))"
+          },
+          "description" : ""
+        }, {
+          "_row_id" : null,
+          "target" : "amount",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "sum(col(\"amount\"))"
+          },
+          "description" : ""
+        } ],
+        "pivotColumn" : null,
+        "pivotValues" : [ ],
+        "activeTab" : "aggregate",
+        "columnsSelector" : [ ],
+        "groupBy" : [ {
+          "_row_id" : null,
+          "target" : "customer_id",
+          "expression" : {
+            "format" : "scala",
+            "expression" : "col(\"customer_id\")"
+          },
+          "description" : ""
+        } ]
+      }
+    },
+    "Customers" : {
+      "id" : "Customers",
+      "component" : "Source",
+      "metadata" : {
+        "label" : "Customers",
+        "slug" : "Customers",
+        "x" : 120.00028553211455,
+        "y" : 320,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ ],
+        "outputs" : [ {
+          "id" : "Customers__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "datasetId" : "5721/datasets/Customers"
+      }
+    },
+    "Report" : {
+      "id" : "Report",
+      "component" : "Target",
+      "metadata" : {
+        "label" : "Report",
+        "slug" : "Report",
+        "x" : 1320.0004679813464,
+        "y" : 220,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "Report__in",
+          "slug" : "in"
+        } ],
+        "outputs" : [ ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "datasetId" : "5721/datasets/Report"
+      }
+    },
+    "Orders" : {
+      "id" : "Orders",
+      "component" : "Source",
+      "metadata" : {
+        "label" : "Orders",
+        "slug" : "Orders",
+        "x" : 120.00098801753029,
+        "y" : 120,
+        "language" : "scala",
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false
+      },
+      "ports" : {
+        "inputs" : [ ],
+        "outputs" : [ {
+          "id" : "Orders__out",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ]
+      },
+      "properties" : {
+        "datasetId" : "5721/datasets/Orders"
+      }
+    }
+  },
+  "ports" : {
+    "inputs" : [ ],
+    "outputs" : [ ],
+    "selectedInputFields" : [ ]
+  }
+}

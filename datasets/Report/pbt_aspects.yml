@@ -1,0 +1,16 @@
+version: 1
+schema:
+  type: struct
+  fields:
+  - name: customer_id
+    type: decimal(10,0)
+    nullable: true
+    metadata: {}
+  - name: full_name
+    type: string
+    nullable: true
+    metadata: {}
+  - name: amount
+    type: decimal(10,0)
+    nullable: true
+    metadata: {}
