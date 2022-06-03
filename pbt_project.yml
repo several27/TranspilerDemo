@@ -1,0 +1,12 @@
+name: TranspilerDemo
+description: ''
+version: 0.0.1
+author: maciej+transpiler-demo@prophecy.io
+language: scala
+pipelines: {}
+datasets: {}
+jobs: {}
+libraries: []
+subgraphs: {}
+dependencies: '[]'
+template: '[]'
